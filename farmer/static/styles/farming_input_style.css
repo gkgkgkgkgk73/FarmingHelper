@@ -1,0 +1,111 @@
+/* 전반적인 페이지 레이아웃 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f9f9f9;
+    margin: 0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+/* 폼 입력 요소 스타일 */
+form div {
+    margin-bottom: 15px;
+    width: 100%;
+    max-width: 400px;
+}
+
+label {
+    display: block;
+    font-size: 16px;
+    margin-bottom: 5px;
+    color: #555;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+input[type="text"]:focus,
+input[type="number"]:focus,
+select:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* 버튼 스타일 */
+button {
+    padding: 10px 20px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 10px;
+    transition: background-color 0.3s ease;
+}
+
+/* 기본 버튼 색상 */
+button#start-button {
+    background-color: #4CAF50;
+    color: white;
+}
+
+button#start-button:hover {
+    background-color: #45a049;
+}
+
+button#submit-button {
+    background-color: #008CBA;
+    color: white;
+    cursor: not-allowed; /* 시작 전에 비활성화 상태 */
+}
+
+button#submit-button.enabled {
+    cursor: pointer;
+}
+
+button#submit-button:hover.enabled {
+    background-color: #007BB5;
+}
+
+button#reset-button {
+    background-color: #f44336;
+    color: white;
+}
+
+button#reset-button:hover {
+    background-color: #da190b;
+}
+
+/* CSRF token 숨기기 */
+input[name="csrfmiddlewaretoken"] {
+    display: none;
+}
+
+/* 화면 크기에 따른 반응형 스타일 */
+@media (max-width: 600px) {
+    form div {
+        width: 90%;
+    }
+    
+    button {
+        width: 90%;
+    }
+}

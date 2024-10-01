@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static '/styles/farming_input_style.css' %}">
+    <title>파밍 입력</title>
+</head>
+<body>
+    <form method="get" action="{% url 'farming-record' %}">
+        {% csrf_token %}
+        <button type="submit">파밍 기록 탭</button>
+    </form>
+    <form method="get" action="{% url 'farmerapp' %}">
+        {% csrf_token %}
+        <button type="submit">파밍 결과 확인 탭</button>
+    </form>
+    <h1>파밍 입력 탭</h1>
+    <form id="farming-form">
+        {% csrf_token %}
+        <div>
+            <label for="farming_title">파밍제목</label>
+            <input type="text" id="farming_title" name="farming_title" required>
+        </div>
+
+        <div>
+            <label for="rotation">로테이션</label>
+            <input type="number" id="rotation" name="rotation" min="0" required>
+        </div>
+        
+        <div>
+            <label for="yellow">노란생기</label>
+            <input type="number" id="yellow" name="yellow" min="0" required>
+        </div>
+        
+        <div>
+            <label for="red">빨간생기</label>
+            <input type="number" id="red" name="red" min="0" required>
+        </div>
+        
+        <div>
+            <label for="blue">파란생기</label>
+            <input type="number" id="blue" name="blue" min="0" required>
+        </div>
+        
+        <div>
+            <label for="divine">럭키</label>
+            <input type="number" id="divine" name="divine" min="0" required>
+        </div>
+        
+        <div>
+            <label for="map_type">17T 지도 종류</label>
+            <select id="map_type" name="map_type" required>
+                <option value="흉물">흉물</option>
+                <option value="성역">성역</option>
+                <option value="성채">성채</option>
+                <option value="요새">요새</option>
+                <option value="지구라트">지구라트</option>
+            </select>
+        </div>
+        
+        <div>
+            <label for="map_count">17T 지도 개수</label>
+            <input type="number" id="map_count" name="map_count" min="0" required>
+        </div>
+        <div>
+            <label for="cost">비용</label>
+            <input type="number" id="cost" name="cost" min="0" required>
+        </div>
+        <button type="button" id="start-button">시작</button>
+        <button type="button" id="submit-button" disabled>전송</button>
+        <button type="reset" id="reset-button">초기화</button>
+    </form>
+
+    <script>
+        let farmingKey = "";
+
+        document.getElementById('start-button').addEventListener('click', function() {
+            const farmingTitle = document.getElementById('farming_title').value;
+            if (farmingTitle.trim() !== "") {
+                fetch('{% url "farming-record" %}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token }}'
+                    },
+                    body: JSON.stringify({'farming_title': farmingTitle})
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 200) {
+                        farmingKey = data.key;
+                        document.getElementById('submit-button').disabled = false;
+                    }
+                });
+            }
+        });
+
+        document.getElementById('submit-button').addEventListener('click', function() {
+            const formData = new FormData(document.getElementById('farming-form'));
+            formData.append('key', farmingKey);
+            fetch('{% url "farming-record-end" %}', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': '{{ csrf_token }}'
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 204) {
+                    alert('전송 완료');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
